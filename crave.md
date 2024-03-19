@@ -76,8 +76,9 @@ Run the following command to install crave.
 
 Note: you just need to run it once in your instance. ONLY ONCE!!
 ```
-bash <(curl -s https://raw.githubusercontent.com/accupara/crave/master/get_crave.sh) 
+bash <(curl -s https://raw.githubusercontent.com/omansh-krishn/crave/main/install.sh) 
 ```
+Note: This command is only meant to be used on linux systems with amd64 cpu (ex: segfault), use the [official installation script](https://raw.githubusercontent.com/accupara/crave/master/get_crave.sh) for other systems.
 
 #### ➤ STEP 2:
 Now, you'll need the `crave.conf` from foss.crave.io
@@ -98,7 +99,7 @@ WaaaW, you are a pro, trust me.
 Connecting to crave's devspace
 
 Now, you can connect to devspace by running
-```crave -c crave.conf devspace```
+```./crave -c crave.conf devspace```
 And finally you will land in crave's devspace.
 
 YAAAY !! (again)
