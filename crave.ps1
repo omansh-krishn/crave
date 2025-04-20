@@ -19,9 +19,10 @@ if ($IsWindows) {
 
 $currentpath = [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::User)
 
-if ($currentPath -notmatch [regex]::Escape($craveinstallpath)) {
+if ($currentpath -notmatch [regex]::Escape($craveinstallpath)) {
     $newpath = "$currentpath;$craveinstallpath"
     [System.Environment]::SetEnvironmentVariable("PATH", $newPath, [System.EnvironmentVariableTarget]::User)
+    $env:PATH = $newpath
     Write-Output "$craveinstallpath added to the current user's PATH."
 } else {
     Write-Output "$craveinstallpath is already in the current user's PATH."
@@ -39,14 +40,18 @@ if (Test-Path -Path $craveinstallpath -PathType Container) {
         Write-Host "Not creating backup of $craveinstallpath, as it's empty."
     }
 } else {
-    Write-Host "Directory $craveinstallpath doesn't exists."
+    Write-Host "Directory $craveinstallpath doesn't exist."
+}
+
+if (-not (Test-Path -Path $craveinstallpath)) {
+    New-Item -ItemType Directory -Path $craveinstallpath | Out-Null
 }
 
 Invoke-WebRequest $cravezipurl -OutFile "crave-bin.zip"
-Write-Output "Zip downloaded successfully.`n Expanding archive..."
-Expand-Archive -Path "crave-bin.zip"
-Move-Item -Path "./crave-bin/crave-windows" -Destination "$craveinstallpath" -Force
+Write-Output "Zip downloaded successfully.`nExpanding archive..."
+Expand-Archive -Path "crave-bin.zip" -DestinationPath "crave-bin"
+Move-Item -Path "./crave-bin/crave-windows/*" -Destination "$craveinstallpath" -Force
 Remove-Item crave-bin.zip -Force
-Remove-Item crave-bin -Force
-Write-Host "Crave is successfully installed in $craveinstallpath`nTo execute crave, simply run crave in your terminal"
-Write-Host "`n`nNOTE: Please restart your current terminal session so the changes done to the environment are applied."
+Remove-Item crave-bin -Recurse -Force
+Write-Host "Crave is successfully installed in $craveinstallpath"
+Write-Host "You can now execute 'crave' right away."
